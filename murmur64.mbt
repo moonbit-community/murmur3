@@ -23,7 +23,7 @@ pub fn Digest64::new() -> Digest64 {
 
 ///|
 /// Write data to the 64-bit hasher
-pub fn Digest64::write(self : Digest64, data : Bytes) -> Int {
+pub fn Digest64::write(self : Digest64, data : Bytes) -> Unit {
   let Digest64(inner) = self
   inner.write(data)
 }

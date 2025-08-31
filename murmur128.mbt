@@ -114,7 +114,7 @@ pub fn Digest128::size(_self : Digest128) -> Int {
 
 ///|
 /// Write data to the 128-bit hasher
-pub fn Digest128::write(self : Digest128, data : Bytes) -> Int {
+pub fn Digest128::write(self : Digest128, data : Bytes) -> Unit {
   self.digest.write(self, data)
 }
 

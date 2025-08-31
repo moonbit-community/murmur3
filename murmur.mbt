@@ -48,7 +48,7 @@ fn[T : BMixer] Digest::write(
   self : Digest,
   bmixer : T,
   data : Bytes,
-) -> Int {
+) -> Unit {
   let n = data.length()
   self.clen += n
   let mut p = data
@@ -91,7 +91,6 @@ fn[T : BMixer] Digest::write(
     tail_array.push(self.buf[i])
   }
   self.tail = Bytes::from_array(tail_array)
-  n
 }
 
 ///|

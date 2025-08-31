@@ -80,7 +80,7 @@ pub fn Digest32::size(_self : Digest32) -> Int {
 
 ///|
 /// Write data to the 32-bit hasher
-pub fn Digest32::write(self : Digest32, data : Bytes) -> Int {
+pub fn Digest32::write(self : Digest32, data : Bytes) -> Unit {
   self.digest.write(self, data)
 }
 

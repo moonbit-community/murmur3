@@ -24,7 +24,7 @@ fn Digest128::reset(Self) -> Unit
 fn Digest128::size(Self) -> Int
 fn Digest128::sum(Self) -> Bytes
 fn Digest128::sum128(Self) -> UInt128
-fn Digest128::write(Self, Bytes) -> Int
+fn Digest128::write(Self, Bytes) -> Unit
 
 type Digest32
 fn Digest32::new() -> Self
@@ -33,7 +33,7 @@ fn Digest32::reset(Self) -> Unit
 fn Digest32::size(Self) -> Int
 fn Digest32::sum(Self) -> Bytes
 fn Digest32::sum32(Self) -> UInt
-fn Digest32::write(Self, Bytes) -> Int
+fn Digest32::write(Self, Bytes) -> Unit
 
 type Digest64
 fn Digest64::new() -> Self
@@ -42,12 +42,13 @@ fn Digest64::reset(Self) -> Unit
 fn Digest64::size(Self) -> Int
 fn Digest64::sum(Self) -> Bytes
 fn Digest64::sum64(Self) -> UInt64
-fn Digest64::write(Self, Bytes) -> Int
+fn Digest64::write(Self, Bytes) -> Unit
 
 pub(all) struct UInt128 {
   hi : UInt64
   lo : UInt64
 }
+impl Show for UInt128
 
 // Type aliases
 

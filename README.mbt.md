@@ -44,9 +44,9 @@ For large data or incremental processing:
 test "streaming 32-bit hash" {
   let hasher = @murmur3.Digest32::new()
   
-  hasher.write("Hello".to_bytes()) |> ignore
-  hasher.write(", ".to_bytes()) |> ignore
-  hasher.write("World!".to_bytes()) |> ignore
+  hasher.write("Hello".to_bytes())
+  hasher.write(", ".to_bytes())
+  hasher.write("World!".to_bytes())
   
   let result = hasher.sum32()
   inspect(result, content="1777475617")
@@ -55,9 +55,9 @@ test "streaming 32-bit hash" {
 test "streaming 128-bit hash" {
   let hasher = @murmur3.Digest128::new()
   
-  hasher.write("Hello".to_bytes()) |> ignore
-  hasher.write(", ".to_bytes()) |> ignore
-  hasher.write("World!".to_bytes()) |> ignore
+  hasher.write("Hello".to_bytes())
+  hasher.write(", ".to_bytes())
+  hasher.write("World!".to_bytes())
   
   let hash = hasher.sum128()
   inspect(hash, content="{hi: 11400168794036550540, lo: 3017233662317374139}")
