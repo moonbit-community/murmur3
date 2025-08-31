@@ -41,7 +41,7 @@ struct Digest128 {
 ///|
 /// Create a new 128-bit hasher with the given seeds
 pub fn Digest128::new_with_seed(seed1 : UInt64, seed2 : UInt64) -> Digest128 {
-  let seed = UInt128::new(seed1, seed2)
+  let seed = UInt128::{ hi: seed1, lo: seed2 }
   { digest: Digest::new(16), seed, hash: seed }
 }
 
@@ -55,8 +55,8 @@ pub fn Digest128::new() -> Digest128 {
 /// Implement BMixer trait for Digest128
 impl BMixer for Digest128 with bmix(self, p) {
   let mut data = p
-  let mut h1 = self.hash.high()
-  let mut h2 = self.hash.low()
+  let mut h1 = self.hash.hi
+  let mut h2 = self.hash.lo
 
   // Process 16-byte chunks
   while data.length() >= 16 {
@@ -92,7 +92,7 @@ impl BMixer for Digest128 with bmix(self, p) {
     h2 = h2 + h1
     h2 = h2 * 5UL + 0x38495ab5UL
   }
-  self.hash = UInt128::new(h1, h2)
+  self.hash = UInt128::{ hi: h1, lo: h2 }
   data
 }
 
@@ -121,8 +121,8 @@ pub fn Digest128::write(self : Digest128, data : Bytes) -> Int {
 ///|
 /// Finalize and return the 128-bit hash as UInt128
 pub fn Digest128::sum128(self : Digest128) -> UInt128 {
-  let mut h1 = self.hash.high()
-  let mut h2 = self.hash.low()
+  let mut h1 = self.hash.hi
+  let mut h2 = self.hash.lo
   let mut k1 = 0UL
   let mut k2 = 0UL
 
@@ -194,15 +194,15 @@ pub fn Digest128::sum128(self : Digest128) -> UInt128 {
   h2 = fmix64(h2)
   h1 = h1 + h2
   h2 = h2 + h1
-  UInt128::new(h1, h2)
+  UInt128::{ hi: h1, lo: h2 }
 }
 
 ///|
 /// Get the hash as a byte array (big-endian)
 pub fn Digest128::sum(self : Digest128) -> Bytes {
   let hash128 = self.sum128()
-  let h1 = hash128.high()
-  let h2 = hash128.low()
+  let h1 = hash128.hi
+  let h2 = hash128.lo
   let array = [
     ((h1 >> 56) & 0xFFUL).to_byte(),
     ((h1 >> 48) & 0xFFUL).to_byte(),

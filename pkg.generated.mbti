@@ -14,10 +14,6 @@ fn sum32(Bytes) -> UInt
 
 fn sum64(Bytes) -> UInt64
 
-fn sum64_bytes_from_digest(Digest64) -> Bytes
-
-fn sum64_from_digest(Digest64) -> UInt64
-
 // Errors
 
 // Types and methods
@@ -48,11 +44,10 @@ fn Digest64::sum(Self) -> Bytes
 fn Digest64::sum64(Self) -> UInt64
 fn Digest64::write(Self, Bytes) -> Int
 
-pub(all) struct UInt128(UInt64, UInt64)
-
-fn UInt128::high(Self) -> UInt64
-fn UInt128::low(Self) -> UInt64
-fn UInt128::new(UInt64, UInt64) -> Self
+pub(all) struct UInt128 {
+  hi : UInt64
+  lo : UInt64
+}
 
 // Type aliases
 

@@ -33,7 +33,7 @@ pub fn Digest64::write(self : Digest64, data : Bytes) -> Int {
 pub fn Digest64::sum64(self : Digest64) -> UInt64 {
   let Digest64(inner) = self
   let hash128 = inner.sum128()
-  hash128.high()
+  hash128.hi
 }
 
 ///|
@@ -71,7 +71,7 @@ pub fn Digest64::sum(self : Digest64) -> Bytes {
 /// Returns the first 64 bits of the 128-bit hash
 pub fn sum64(data : Bytes) -> UInt64 {
   let hash128 = sum128(data)
-  hash128.high()
+  hash128.hi
 }
 
 ///|
@@ -80,18 +80,6 @@ pub fn sum64(data : Bytes) -> UInt64 {
 /// this uses SeedSum128(seed, seed, data) and returns the first part
 pub fn seed_sum64(seed : UInt64, data : Bytes) -> UInt64 {
   let hash128 = seed_sum128(seed, seed, data)
-  hash128.high()
+  hash128.hi
 }
 
-
-///|
-/// Finalize and return the 64-bit hash (first part of 128-bit hash)
-pub fn sum64_from_digest(digest : Digest64) -> UInt64 {
-  digest.sum64()
-}
-
-///|
-/// Get the hash as a byte array (big-endian, 8 bytes)
-pub fn sum64_bytes_from_digest(digest : Digest64) -> Bytes {
-  digest.sum()
-}

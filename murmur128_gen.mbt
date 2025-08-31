@@ -126,5 +126,5 @@ pub fn seed_sum128(
   h2 = fmix64(h2)
   h1 = h1 + h2
   h2 = h2 + h1
-  UInt128::new(h1, h2)
+  UInt128::{ hi: h1, lo: h2 }
 }

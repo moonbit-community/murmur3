@@ -79,8 +79,8 @@ test "sum128 reference vectors" {
     let test_vec = test_data[i]
     let data = test_vec.s
     let hash128 = sum128(data)
-    let h1 = hash128.high()
-    let h2 = hash128.low()
+    let h1 = hash128.hi
+    let h2 = hash128.lo
     assert_eq(h1, test_vec.h64_1)
     assert_eq(h2, test_vec.h64_2)
   }
@@ -109,8 +109,8 @@ test "Digest128 streaming" {
     let hasher = Digest128::new()
     hasher.write(data) |> ignore
     let hash128 = hasher.sum128()
-    let h1 = hash128.high()
-    let h2 = hash128.low()
+    let h1 = hash128.hi
+    let h2 = hash128.lo
     assert_eq(h1, test_vec.h64_1)
     assert_eq(h2, test_vec.h64_2)
   }
@@ -139,16 +139,16 @@ test "seed_sum128 functionality" {
   let hash128_2 = seed_sum128(1UL, 1UL, data)
 
   // Different seeds should produce different hashes
-  let h1_1 = hash128_1.high()
-  let h2_1 = hash128_1.low()
-  let h1_2 = hash128_2.high()
-  let h2_2 = hash128_2.low()
+  let h1_1 = hash128_1.hi
+  let h2_1 = hash128_1.lo
+  let h1_2 = hash128_2.hi
+  let h2_2 = hash128_2.lo
   assert_false(h1_1 == h1_2 && h2_1 == h2_2)
 
   // Same seed should produce same hash
   let hash128_3 = seed_sum128(0UL, 0UL, data)
-  let h1_3 = hash128_3.high()
-  let h2_3 = hash128_3.low()
+  let h1_3 = hash128_3.hi
+  let h2_3 = hash128_3.lo
   assert_eq(h1_1, h1_3)
   assert_eq(h2_1, h2_3)
 }
@@ -189,10 +189,10 @@ test "incremental hashing 128-bit" {
   hasher.write(part2) |> ignore
   let hash128_incremental = hasher.sum128()
   
-  let h1_full = hash128_full.high()
-  let h2_full = hash128_full.low()
-  let h1_incremental = hash128_incremental.high()
-  let h2_incremental = hash128_incremental.low()
+  let h1_full = hash128_full.hi
+  let h2_full = hash128_full.lo
+  let h1_incremental = hash128_incremental.hi
+  let h2_incremental = hash128_incremental.lo
   assert_eq(h1_full, h1_incremental)
   assert_eq(h2_full, h2_incremental)
 }
@@ -232,11 +232,40 @@ test "digest types consistency" {
   let hash128 = digest128.sum128()
   
   // Verify that 64-bit is the high part of 128-bit
-  assert_eq(hash64, hash128.high())
+  assert_eq(hash64, hash128.hi)
   
   // Verify that one-shot functions produce the same results
   assert_eq(hash32, sum32(test_data))
   assert_eq(hash64, sum64(test_data))
-  assert_eq(hash128.high(), sum128(test_data).high())
-  assert_eq(hash128.low(), sum128(test_data).low())
+  assert_eq(hash128.hi, sum128(test_data).hi)
+  assert_eq(hash128.lo, sum128(test_data).lo)
+}
+///|
+/// Test UInt128 record field access and Digest64 methods
+test "UInt128 field access and Digest64 methods" {
+  // Create test data using only bytes (no string conversion needed)
+  let test_data = b"test field access"
+  
+  // Test 128-bit hash
+  let hash128 = sum128(test_data)
+  let high_part = hash128.hi
+  let low_part = hash128.lo
+  
+  // Test 64-bit hash matches high part of 128-bit
+  let hash64 = sum64(test_data)
+  assert_eq(hash64, hash128.hi)
+  
+  // Test Digest64 methods
+  let digest64 = Digest64::new()
+  digest64.write(test_data) |> ignore
+  let digest64_result = digest64.sum64()
+  assert_eq(digest64_result, hash64)
+  
+  // Test consistency between all methods
+  let digest128 = Digest128::new()
+  digest128.write(test_data) |> ignore
+  let stream_hash128 = digest128.sum128()
+  
+  assert_eq(high_part, stream_hash128.hi)
+  assert_eq(low_part, stream_hash128.lo)
 }
