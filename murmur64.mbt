@@ -6,8 +6,6 @@
 /// 64-bit digest structure - wraps the 128-bit version  
 struct Digest64(Digest128)
 
-
-
 ///|
 /// Create a new 64-bit hasher with the given seed
 /// Uses the 128-bit implementation with seed duplicated
@@ -82,4 +80,3 @@ pub fn seed_sum64(seed : UInt64, data : Bytes) -> UInt64 {
   let hash128 = seed_sum128(UInt128::{ hi: seed, lo: seed }, data)
   hash128.hi
 }
-

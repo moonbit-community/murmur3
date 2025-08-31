@@ -39,16 +39,10 @@ fn Digest::new(buf_size : Int) -> Digest {
   { clen: 0, tail: Bytes::new(0), buf: FixedArray::make(buf_size, 0) }
 }
 
-
-
 ///|
 /// Write data to the digest
 /// Returns the number of bytes written (always equals input length)
-fn[T : BMixer] Digest::write(
-  self : Digest,
-  bmixer : T,
-  data : Bytes,
-) -> Unit {
+fn[T : BMixer] Digest::write(self : Digest, bmixer : T, data : Bytes) -> Unit {
   let n = data.length()
   self.clen += n
   let mut p = data
@@ -100,4 +94,3 @@ fn[T : BMixer] Digest::reset(self : Digest, bmixer : T) -> Unit {
   self.tail = Bytes::new(0)
   bmixer.reset()
 }
-

@@ -46,7 +46,6 @@ let test_data : Array[TestVector] = [
   },
 ]
 
-
 ///|
 /// Test 32-bit hash function
 test "sum32 reference vectors" {
@@ -58,8 +57,6 @@ test "sum32 reference vectors" {
   }
 }
 
-
-
 ///|
 /// Test 64-bit hash function
 test "sum64 reference vectors" {
@@ -70,7 +67,6 @@ test "sum64 reference vectors" {
     assert_eq(hash, test_vec.h64_1)
   }
 }
-
 
 ///|
 /// Test 128-bit hash function
@@ -85,7 +81,6 @@ test "sum128 reference vectors" {
     assert_eq(h2, test_vec.h64_2)
   }
 }
-
 
 ///|
 /// Test 32-bit streaming hasher
@@ -164,8 +159,8 @@ test "incremental hashing 32-bit" {
 
   // Hash incrementally
   let hasher = Digest32::new()
-  let part1: Bytes = "hello, "
-  let part2: Bytes = "world"
+  let part1 : Bytes = "hello, "
+  let part2 : Bytes = "world"
   hasher.write(part1) |> ignore
   hasher.write(part2) |> ignore
   let hash_incremental = hasher.sum32()
@@ -183,12 +178,11 @@ test "incremental hashing 128-bit" {
 
   // Hash incrementally
   let hasher = Digest128::new()
-  let part1: Bytes = "hello, "
-  let part2: Bytes = "world"
+  let part1 : Bytes = "hello, "
+  let part2 : Bytes = "world"
   hasher.write(part1) |> ignore
   hasher.write(part2) |> ignore
   let hash128_incremental = hasher.sum128()
-  
   let h1_full = hash128_full.hi
   let h2_full = hash128_full.lo
   let h1_incremental = hash128_incremental.hi
@@ -196,8 +190,6 @@ test "incremental hashing 128-bit" {
   assert_eq(h1_full, h1_incremental)
   assert_eq(h2_full, h2_incremental)
 }
-
-
 
 ///|
 /// Test 64-bit streaming hasher methods
@@ -211,61 +203,62 @@ test "Digest64 streaming methods" {
     assert_eq(hash, test_vec.h64_1)
   }
 }
+
 ///|
 /// Test all digest types for consistency
 test "digest types consistency" {
   let test_data : Bytes = "test consistency"
-  
+
   // Test 32-bit
   let digest32 = Digest32::new()
   digest32.write(test_data) |> ignore
   let hash32 = digest32.sum32()
-  
+
   // Test 64-bit  
   let digest64 = Digest64::new()
   digest64.write(test_data) |> ignore
   let hash64 = digest64.sum64()
-  
+
   // Test 128-bit
   let digest128 = Digest128::new()
   digest128.write(test_data) |> ignore
   let hash128 = digest128.sum128()
-  
+
   // Verify that 64-bit is the high part of 128-bit
   assert_eq(hash64, hash128.hi)
-  
+
   // Verify that one-shot functions produce the same results
   assert_eq(hash32, sum32(test_data))
   assert_eq(hash64, sum64(test_data))
   assert_eq(hash128.hi, sum128(test_data).hi)
   assert_eq(hash128.lo, sum128(test_data).lo)
 }
+
 ///|
 /// Test UInt128 record field access and Digest64 methods
 test "UInt128 field access and Digest64 methods" {
   // Create test data using only bytes (no string conversion needed)
   let test_data = b"test field access"
-  
+
   // Test 128-bit hash
   let hash128 = sum128(test_data)
   let high_part = hash128.hi
   let low_part = hash128.lo
-  
+
   // Test 64-bit hash matches high part of 128-bit
   let hash64 = sum64(test_data)
   assert_eq(hash64, hash128.hi)
-  
+
   // Test Digest64 methods
   let digest64 = Digest64::new()
   digest64.write(test_data) |> ignore
   let digest64_result = digest64.sum64()
   assert_eq(digest64_result, hash64)
-  
+
   // Test consistency between all methods
   let digest128 = Digest128::new()
   digest128.write(test_data) |> ignore
   let stream_hash128 = digest128.sum128()
-  
   assert_eq(high_part, stream_hash128.hi)
   assert_eq(low_part, stream_hash128.lo)
 }
