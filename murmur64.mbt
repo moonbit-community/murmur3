@@ -1,0 +1,75 @@
+///| 64-bit MurmurHash3 Implementation (wrapper around 128-bit)
+/// Note: As the canonical implementation does not support Sum64,
+/// this uses the 128-bit version with SeedNew128(seed, seed)
+
+///|
+/// 64-bit digest structure - wraps the 128-bit version  
+typealias Digest128 as Digest64
+
+///|
+/// Create a new 64-bit hasher with the given seed
+/// Uses the 128-bit implementation with seed duplicated
+pub fn new64_with_seed(seed : UInt64) -> Digest64 {
+  Digest128::new_with_seed(seed, seed)
+}
+
+///|
+/// Create a new 64-bit hasher with seed 0
+pub fn new64() -> Digest64 {
+  new64_with_seed(0UL)
+}
+
+///|
+/// Finalize and return the 64-bit hash (first part of 128-bit hash)
+pub fn sum64_from_digest(digest : Digest64) -> UInt64 {
+  let hash128 = digest.sum128()
+  hash128.high()
+}
+
+///|
+/// Get the hash as a byte array (big-endian, 8 bytes)
+pub fn sum64_bytes_from_digest(digest : Digest64) -> Bytes {
+  let h1 = sum64_from_digest(digest)
+  let array = [
+    ((h1 >> 56) & 0xFFUL).to_byte(),
+    ((h1 >> 48) & 0xFFUL).to_byte(),
+    ((h1 >> 40) & 0xFFUL).to_byte(),
+    ((h1 >> 32) & 0xFFUL).to_byte(),
+    ((h1 >> 24) & 0xFFUL).to_byte(),
+    ((h1 >> 16) & 0xFFUL).to_byte(),
+    ((h1 >> 8) & 0xFFUL).to_byte(),
+    (h1 & 0xFFUL).to_byte(),
+  ]
+  Bytes::from_array(array)
+}
+
+///|
+/// Compute MurmurHash3 64-bit hash of data
+/// Returns the first 64 bits of the 128-bit hash
+pub fn sum64(data : Bytes) -> UInt64 {
+  let hash128 = sum128(data)
+  hash128.high()
+}
+
+///|
+/// Compute MurmurHash3 64-bit hash of data with given seed
+/// Because the canonical implementation does not support SeedSum64,
+/// this uses SeedSum128(seed, seed, data) and returns the first part
+pub fn seed_sum64(seed : UInt64, data : Bytes) -> UInt64 {
+  let hash128 = seed_sum128(seed, seed, data)
+  hash128.high()
+}
+
+///|
+/// String version of sum64 - compute hash directly from string
+pub fn string_sum64(data : String) -> UInt64 {
+  let hash128 = string_sum128(data)
+  hash128.high()
+}
+
+///|
+/// String version of seed_sum64 - compute hash from string with seed
+pub fn seed_string_sum64(seed : UInt64, data : String) -> UInt64 {
+  let hash128 = seed_string_sum128(seed, seed, data)
+  hash128.high()
+}

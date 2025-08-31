@@ -1,0 +1,71 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/murmur3"
+
+// Values
+fn new64() -> Digest128
+
+fn new64_with_seed(UInt64) -> Digest128
+
+fn seed_string_sum128(UInt64, UInt64, String) -> UInt128
+
+fn seed_string_sum32(UInt, String) -> UInt
+
+fn seed_string_sum64(UInt64, String) -> UInt64
+
+fn seed_sum128(UInt64, UInt64, Bytes) -> UInt128
+
+fn seed_sum32(UInt, Bytes) -> UInt
+
+fn seed_sum64(UInt64, Bytes) -> UInt64
+
+fn string_sum128(String) -> UInt128
+
+fn string_sum32(String) -> UInt
+
+fn string_sum64(String) -> UInt64
+
+fn string_to_utf8_bytes(String) -> Bytes
+
+fn sum128(Bytes) -> UInt128
+
+fn sum32(Bytes) -> UInt
+
+fn sum64(Bytes) -> UInt64
+
+fn sum64_bytes_from_digest(Digest128) -> Bytes
+
+fn sum64_from_digest(Digest128) -> UInt64
+
+// Errors
+
+// Types and methods
+type Digest128
+fn Digest128::new() -> Self
+fn Digest128::new_with_seed(UInt64, UInt64) -> Self
+fn Digest128::reset(Self) -> Unit
+fn Digest128::size(Self) -> Int
+fn Digest128::sum(Self) -> Bytes
+fn Digest128::sum128(Self) -> UInt128
+fn Digest128::write(Self, Bytes) -> Int
+
+type Digest32
+fn Digest32::new() -> Self
+fn Digest32::new_with_seed(UInt) -> Self
+fn Digest32::reset(Self) -> Unit
+fn Digest32::size(Self) -> Int
+fn Digest32::sum(Self) -> Bytes
+fn Digest32::sum32(Self) -> UInt
+fn Digest32::write(Self, Bytes) -> Int
+
+pub(all) struct UInt128(UInt64, UInt64)
+
+fn UInt128::from_tuple((UInt64, UInt64)) -> Self
+fn UInt128::high(Self) -> UInt64
+fn UInt128::low(Self) -> UInt64
+fn UInt128::new(UInt64, UInt64) -> Self
+fn UInt128::to_tuple(Self) -> (UInt64, UInt64)
+
+// Type aliases
+
+// Traits
+
