@@ -12,22 +12,6 @@ This is a port of the Go implementation from [github.com/twmb/murmur3](https://g
 - **Memory-safe implementation** without unsafe operations
 - **Compatible API design** following MoonBit conventions
 
-## Quick Start
-
-Add this package to your project:
-
-```bash
-moon add username/murmur3
-```
-
-Import in your `moon.pkg.json`:
-
-```json
-{
-  "import": ["username/murmur3"]
-}
-```
-
 ## Usage Examples
 
 ### One-shot Hashing
@@ -36,19 +20,19 @@ Import in your `moon.pkg.json`:
 test "32-bit hash example" {
   let data = "Hello, World!".to_bytes()
   let hash = @murmur3.sum32(data)
-  println("32-bit hash: \{hash}")
+  inspect(hash, content="1777475617")
 }
 
 test "64-bit hash example" {
   let data = "Hello, World!".to_bytes()
   let hash = @murmur3.sum64(data)
-  println("64-bit hash: \{hash}")
+  inspect(hash, content="11400168794036550540")
 }
 
 test "128-bit hash example" {
   let data = "Hello, World!".to_bytes()
   let hash = @murmur3.sum128(data)
-  println("128-bit hash: hi=\{hash.hi}, lo=\{hash.lo}")
+  inspect(hash, content="{hi: 11400168794036550540, lo: 3017233662317374139}")
 }
 ```
 
@@ -65,7 +49,7 @@ test "streaming 32-bit hash" {
   hasher.write("World!".to_bytes()) |> ignore
   
   let result = hasher.sum32()
-  println("Streaming 32-bit hash: \{result}")
+  inspect(result, content="1777475617")
 }
 
 test "streaming 128-bit hash" {
@@ -76,7 +60,7 @@ test "streaming 128-bit hash" {
   hasher.write("World!".to_bytes()) |> ignore
   
   let hash = hasher.sum128()
-  println("Streaming 128-bit hash: hi=\{hash.hi}, lo=\{hash.lo}")
+  inspect(hash, content="{hi: 11400168794036550540, lo: 3017233662317374139}")
 }
 ```
 
@@ -100,7 +84,9 @@ test "seeded hashing" {
   // Seeded 128-bit hash
   let hash128 = @murmur3.seed_sum128(seed128, data)
   
-  println("Seeded hashes - 32: \{hash32}, 64: \{hash64}, 128: hi=\{hash128.hi}, lo=\{hash128.lo}")
+  inspect(hash32, content="374868951")
+  inspect(hash64, content="2089968197194997941")
+  inspect(hash128, content="{hi: 15086572923677321942, lo: 14159238408620771331}")
 }
 ```
 

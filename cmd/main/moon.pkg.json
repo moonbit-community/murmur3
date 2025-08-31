@@ -2,8 +2,8 @@
   "is-main": true,
   "import": [
     {
-      "path": "username/murmur3",
-      "alias": "lib"
+      "path": "Yu-zh/murmur3",
+      "alias": "murmur3"
     }
   ]
 }

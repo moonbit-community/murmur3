@@ -1,5 +1,5 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "username/murmur3"
+package "Yu-zh/murmur3"
 
 // Values
 fn seed_sum128(UInt128, Bytes) -> UInt128
