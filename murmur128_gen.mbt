@@ -5,7 +5,7 @@
 /// Compute MurmurHash3 128-bit hash of data with seeds 0, 0
 /// Equivalent to: hasher = new128(); hasher.write(data); hasher.sum128()
 pub fn sum128(data : Bytes) -> UInt128 {
-  seed_sum128(0UL, 0UL, data)
+  seed_sum128(UInt128::{ hi: 0UL, lo: 0UL }, data)
 }
 
 ///|
@@ -13,12 +13,11 @@ pub fn sum128(data : Bytes) -> UInt128 {
 /// This reads and processes data in chunks of little endian uint64s,
 /// making the hash portable across architectures
 pub fn seed_sum128(
-  seed1 : UInt64,
-  seed2 : UInt64,
+  seed : UInt128,
   data : Bytes,
 ) -> UInt128 {
-  let mut h1 = seed1
-  let mut h2 = seed2
+  let mut h1 = seed.hi
+  let mut h2 = seed.lo
   let clen = data.length()
   let mut p = data
 

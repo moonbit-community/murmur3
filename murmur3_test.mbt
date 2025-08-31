@@ -135,8 +135,8 @@ test "seed_sum32 functionality" {
 /// Test seed functionality for 128-bit
 test "seed_sum128 functionality" {
   let data = "test".to_bytes()
-  let hash128_1 = seed_sum128(0UL, 0UL, data)
-  let hash128_2 = seed_sum128(1UL, 1UL, data)
+  let hash128_1 = seed_sum128(UInt128::{ hi: 0UL, lo: 0UL }, data)
+  let hash128_2 = seed_sum128(UInt128::{ hi: 1UL, lo: 1UL }, data)
 
   // Different seeds should produce different hashes
   let h1_1 = hash128_1.hi
@@ -146,7 +146,7 @@ test "seed_sum128 functionality" {
   assert_false(h1_1 == h1_2 && h2_1 == h2_2)
 
   // Same seed should produce same hash
-  let hash128_3 = seed_sum128(0UL, 0UL, data)
+  let hash128_3 = seed_sum128(UInt128::{ hi: 0UL, lo: 0UL }, data)
   let h1_3 = hash128_3.hi
   let h2_3 = hash128_3.lo
   assert_eq(h1_1, h1_3)

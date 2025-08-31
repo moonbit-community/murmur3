@@ -2,7 +2,7 @@
 package "username/murmur3"
 
 // Values
-fn seed_sum128(UInt64, UInt64, Bytes) -> UInt128
+fn seed_sum128(UInt128, Bytes) -> UInt128
 
 fn seed_sum32(UInt, Bytes) -> UInt
 

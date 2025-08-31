@@ -79,7 +79,7 @@ pub fn sum64(data : Bytes) -> UInt64 {
 /// Because the canonical implementation does not support SeedSum64,
 /// this uses SeedSum128(seed, seed, data) and returns the first part
 pub fn seed_sum64(seed : UInt64, data : Bytes) -> UInt64 {
-  let hash128 = seed_sum128(seed, seed, data)
+  let hash128 = seed_sum128(UInt128::{ hi: seed, lo: seed }, data)
   hash128.hi
 }
 
