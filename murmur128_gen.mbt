@@ -128,21 +128,3 @@ pub fn seed_sum128(
   h2 = h2 + h1
   UInt128::new(h1, h2)
 }
-
-///|
-/// String version of sum128 - compute hash directly from string
-pub fn string_sum128(data : String) -> UInt128 {
-  seed_string_sum128(0UL, 0UL, data)
-}
-
-///|
-/// String version of seed_sum128 - compute hash from string with seeds
-/// Converts string to bytes and calls seed_sum128
-pub fn seed_string_sum128(
-  seed1 : UInt64,
-  seed2 : UInt64,
-  data : String,
-) -> UInt128 {
-  let byte_array = string_to_utf8_bytes(data)
-  seed_sum128(seed1, seed2, byte_array)
-}

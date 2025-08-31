@@ -57,17 +57,3 @@ pub fn seed_sum32(seed : UInt, data : Bytes) -> UInt {
   h1 = h1 ^ (h1 >> 16)
   h1
 }
-
-///|
-/// String version of sum32 - compute hash directly from string
-pub fn string_sum32(data : String) -> UInt {
-  seed_string_sum32(0U, data)
-}
-
-///|
-/// String version of seed_sum32 - compute hash from string with seed
-/// Converts string to bytes and calls seed_sum32
-pub fn seed_string_sum32(seed : UInt, data : String) -> UInt {
-  let byte_array = string_to_utf8_bytes(data)
-  seed_sum32(seed, byte_array)
-}

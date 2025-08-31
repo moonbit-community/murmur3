@@ -2,29 +2,11 @@
 package "username/murmur3"
 
 // Values
-fn new64() -> Digest64
-
-fn new64_with_seed(UInt64) -> Digest64
-
-fn seed_string_sum128(UInt64, UInt64, String) -> UInt128
-
-fn seed_string_sum32(UInt, String) -> UInt
-
-fn seed_string_sum64(UInt64, String) -> UInt64
-
 fn seed_sum128(UInt64, UInt64, Bytes) -> UInt128
 
 fn seed_sum32(UInt, Bytes) -> UInt
 
 fn seed_sum64(UInt64, Bytes) -> UInt64
-
-fn string_sum128(String) -> UInt128
-
-fn string_sum32(String) -> UInt
-
-fn string_sum64(String) -> UInt64
-
-fn string_to_utf8_bytes(String) -> Bytes
 
 fn sum128(Bytes) -> UInt128
 

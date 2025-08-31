@@ -8,7 +8,7 @@ struct TestVector {
   h32 : UInt
   h64_1 : UInt64
   h64_2 : UInt64
-  s : String
+  s : Bytes
 }
 
 ///|
@@ -52,95 +52,51 @@ let test_data : Array[TestVector] = [
 test "sum32 reference vectors" {
   for i = 0; i < test_data.length(); i = i + 1 {
     let test_vec = test_data[i]
-    let data = string_to_utf8_bytes(test_vec.s)
+    let data = test_vec.s
     let hash = sum32(data)
-    if hash != test_vec.h32 {
-      println("MISMATCH for '" + test_vec.s + "': got " + hash.to_string() + " expected " + test_vec.h32.to_string())
-    }
     assert_eq(hash, test_vec.h32)
   }
 }
 
-///|
-/// Test 32-bit hash with string input
-test "string_sum32 reference vectors" {
-  for i = 0; i < test_data.length(); i = i + 1 {
-    let test_vec = test_data[i]
-    let hash = string_sum32(test_vec.s)
-    inspect(hash, content=test_vec.h32.to_string())
-  }
-}
+
 
 ///|
 /// Test 64-bit hash function
 test "sum64 reference vectors" {
   for i = 0; i < test_data.length(); i = i + 1 {
     let test_vec = test_data[i]
-    let data = string_to_utf8_bytes(test_vec.s)
+    let data = test_vec.s
     let hash = sum64(data)
-    inspect(hash, content=test_vec.h64_1.to_string())
+    assert_eq(hash, test_vec.h64_1)
   }
 }
 
-///|
-/// Test 64-bit hash with string input
-test "string_sum64 reference vectors" {
-  for i = 0; i < test_data.length(); i = i + 1 {
-    let test_vec = test_data[i]
-    let hash = string_sum64(test_vec.s)
-    inspect(hash, content=test_vec.h64_1.to_string())
-  }
-}
 
 ///|
 /// Test 128-bit hash function
 test "sum128 reference vectors" {
   for i = 0; i < test_data.length(); i = i + 1 {
     let test_vec = test_data[i]
-    let data = string_to_utf8_bytes(test_vec.s)
+    let data = test_vec.s
     let hash128 = sum128(data)
     let h1 = hash128.high()
     let h2 = hash128.low()
-    inspect(
-      (h1, h2),
-      content="(" +
-        test_vec.h64_1.to_string() +
-        ", " +
-        test_vec.h64_2.to_string() +
-        ")",
-    )
+    assert_eq(h1, test_vec.h64_1)
+    assert_eq(h2, test_vec.h64_2)
   }
 }
 
-///|
-/// Test 128-bit hash with string input
-test "string_sum128 reference vectors" {
-  for i = 0; i < test_data.length(); i = i + 1 {
-    let test_vec = test_data[i]
-    let hash128 = string_sum128(test_vec.s)
-    let h1 = hash128.high()
-    let h2 = hash128.low()
-    inspect(
-      (h1, h2),
-      content="(" +
-        test_vec.h64_1.to_string() +
-        ", " +
-        test_vec.h64_2.to_string() +
-        ")",
-    )
-  }
-}
 
 ///|
 /// Test 32-bit streaming hasher
 test "Digest32 streaming" {
   for i = 0; i < test_data.length(); i = i + 1 {
     let test_vec = test_data[i]
-    let data = string_to_utf8_bytes(test_vec.s)
+    let data = test_vec.s
     let hasher = Digest32::new()
     hasher.write(data) |> ignore
     let hash = hasher.sum32()
-    inspect(hash, content=test_vec.h32.to_string())
+    assert_eq(hash, test_vec.h32)
   }
 }
 
@@ -149,27 +105,21 @@ test "Digest32 streaming" {
 test "Digest128 streaming" {
   for i = 0; i < test_data.length(); i = i + 1 {
     let test_vec = test_data[i]
-    let data = string_to_utf8_bytes(test_vec.s)
+    let data = test_vec.s
     let hasher = Digest128::new()
     hasher.write(data) |> ignore
     let hash128 = hasher.sum128()
     let h1 = hash128.high()
     let h2 = hash128.low()
-    inspect(
-      (h1, h2),
-      content="(" +
-        test_vec.h64_1.to_string() +
-        ", " +
-        test_vec.h64_2.to_string() +
-        ")",
-    )
+    assert_eq(h1, test_vec.h64_1)
+    assert_eq(h2, test_vec.h64_2)
   }
 }
 
 ///|
 /// Test seed functionality for 32-bit
 test "seed_sum32 functionality" {
-  let data = string_to_utf8_bytes("test")
+  let data = "test".to_bytes()
   let hash1 = seed_sum32(0U, data)
   let hash2 = seed_sum32(1U, data)
 
@@ -184,7 +134,7 @@ test "seed_sum32 functionality" {
 ///|
 /// Test seed functionality for 128-bit
 test "seed_sum128 functionality" {
-  let data = string_to_utf8_bytes("test")
+  let data = "test".to_bytes()
   let hash128_1 = seed_sum128(0UL, 0UL, data)
   let hash128_2 = seed_sum128(1UL, 1UL, data)
 
@@ -206,16 +156,16 @@ test "seed_sum128 functionality" {
 ///|
 /// Test incremental hashing (processing data in chunks)
 test "incremental hashing 32-bit" {
-  let test_string = "hello, world"
-  let full_data = string_to_utf8_bytes(test_string)
+  let test_string : Bytes = "hello, world"
+  let full_data = test_string
 
   // Hash all at once
   let hash_full = sum32(full_data)
 
   // Hash incrementally
   let hasher = Digest32::new()
-  let part1 = string_to_utf8_bytes("hello, ")
-  let part2 = string_to_utf8_bytes("world")
+  let part1: Bytes = "hello, "
+  let part2: Bytes = "world"
   hasher.write(part1) |> ignore
   hasher.write(part2) |> ignore
   let hash_incremental = hasher.sum32()
@@ -225,16 +175,16 @@ test "incremental hashing 32-bit" {
 ///|
 /// Test incremental hashing (processing data in chunks)
 test "incremental hashing 128-bit" {
-  let test_string = "hello, world"
-  let full_data = string_to_utf8_bytes(test_string)
+  let test_string : Bytes = "hello, world"
+  let full_data = test_string
 
   // Hash all at once
   let hash128_full = sum128(full_data)
 
   // Hash incrementally
   let hasher = Digest128::new()
-  let part1 = string_to_utf8_bytes("hello, ")
-  let part2 = string_to_utf8_bytes("world")
+  let part1: Bytes = "hello, "
+  let part2: Bytes = "world"
   hasher.write(part1) |> ignore
   hasher.write(part2) |> ignore
   let hash128_incremental = hasher.sum128()
@@ -254,7 +204,7 @@ test "incremental hashing 128-bit" {
 test "Digest64 streaming methods" {
   for i = 0; i < test_data.length(); i = i + 1 {
     let test_vec = test_data[i]
-    let data = string_to_utf8_bytes(test_vec.s)
+    let data = test_vec.s
     let hasher = Digest64::new()
     hasher.write(data) |> ignore
     let hash = hasher.sum64()
@@ -264,7 +214,7 @@ test "Digest64 streaming methods" {
 ///|
 /// Test all digest types for consistency
 test "digest types consistency" {
-  let test_data = string_to_utf8_bytes("test consistency")
+  let test_data : Bytes = "test consistency"
   
   // Test 32-bit
   let digest32 = Digest32::new()

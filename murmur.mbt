@@ -102,21 +102,3 @@ fn[T : BMixer] Digest::reset(self : Digest, bmixer : T) -> Unit {
   bmixer.reset()
 }
 
-///|
-/// Helper function to convert string to byte array (UTF-8 for ASCII characters)
-/// This handles the difference between MoonBit's UTF-16 string encoding and the expected UTF-8 bytes
-pub fn string_to_utf8_bytes(s : String) -> Bytes {
-  let result : Array[Byte] = Array::new()
-  for i = 0; i < s.length(); i = i + 1 {
-    let ch = s[i]
-    if ch < 128 {  // ASCII character
-      result.push(ch.to_byte())
-    } else {
-      // For non-ASCII, we'd need proper UTF-8 encoding
-      // For now, this handles ASCII which covers most test cases
-      let placeholder = 63
-      result.push(placeholder.to_byte())  // '?' placeholder
-    }
-  }
-  Bytes::from_array(result)
-}

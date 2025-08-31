@@ -83,34 +83,6 @@ pub fn seed_sum64(seed : UInt64, data : Bytes) -> UInt64 {
   hash128.high()
 }
 
-///|
-/// String version of sum64 - compute hash directly from string
-pub fn string_sum64(data : String) -> UInt64 {
-  let hash128 = string_sum128(data)
-  hash128.high()
-}
-
-///|
-/// String version of seed_sum64 - compute hash from string with seed
-pub fn seed_string_sum64(seed : UInt64, data : String) -> UInt64 {
-  let hash128 = seed_string_sum128(seed, seed, data)
-  hash128.high()
-}
-///|
-/// Convenience Functions (for backwards compatibility)
-
-///|
-/// Create a new 64-bit hasher with the given seed
-/// Uses the 128-bit implementation with seed duplicated
-pub fn new64_with_seed(seed : UInt64) -> Digest64 {
-  Digest64::new_with_seed(seed)
-}
-
-///|
-/// Create a new 64-bit hasher with seed 0
-pub fn new64() -> Digest64 {
-  Digest64::new()
-}
 
 ///|
 /// Finalize and return the 64-bit hash (first part of 128-bit hash)
