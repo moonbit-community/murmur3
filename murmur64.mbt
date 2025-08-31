@@ -4,32 +4,55 @@
 
 ///|
 /// 64-bit digest structure - wraps the 128-bit version  
-typealias Digest128 as Digest64
+struct Digest64(Digest128)
+
+
 
 ///|
 /// Create a new 64-bit hasher with the given seed
 /// Uses the 128-bit implementation with seed duplicated
-pub fn new64_with_seed(seed : UInt64) -> Digest64 {
-  Digest128::new_with_seed(seed, seed)
+pub fn Digest64::new_with_seed(seed : UInt64) -> Digest64 {
+  Digest64(Digest128::new_with_seed(seed, seed))
 }
 
 ///|
 /// Create a new 64-bit hasher with seed 0
-pub fn new64() -> Digest64 {
-  new64_with_seed(0UL)
+pub fn Digest64::new() -> Digest64 {
+  Digest64::new_with_seed(0UL)
+}
+
+///|
+/// Write data to the 64-bit hasher
+pub fn Digest64::write(self : Digest64, data : Bytes) -> Int {
+  let Digest64(inner) = self
+  inner.write(data)
 }
 
 ///|
 /// Finalize and return the 64-bit hash (first part of 128-bit hash)
-pub fn sum64_from_digest(digest : Digest64) -> UInt64 {
-  let hash128 = digest.sum128()
+pub fn Digest64::sum64(self : Digest64) -> UInt64 {
+  let Digest64(inner) = self
+  let hash128 = inner.sum128()
   hash128.high()
 }
 
 ///|
+/// Reset the 64-bit hasher to initial state
+pub fn Digest64::reset(self : Digest64) -> Unit {
+  let Digest64(inner) = self
+  inner.reset()
+}
+
+///|
+/// Get the size in bytes (8 for 64-bit hash)
+pub fn Digest64::size(_self : Digest64) -> Int {
+  8
+}
+
+///|
 /// Get the hash as a byte array (big-endian, 8 bytes)
-pub fn sum64_bytes_from_digest(digest : Digest64) -> Bytes {
-  let h1 = sum64_from_digest(digest)
+pub fn Digest64::sum(self : Digest64) -> Bytes {
+  let h1 = self.sum64()
   let array = [
     ((h1 >> 56) & 0xFFUL).to_byte(),
     ((h1 >> 48) & 0xFFUL).to_byte(),
@@ -72,4 +95,31 @@ pub fn string_sum64(data : String) -> UInt64 {
 pub fn seed_string_sum64(seed : UInt64, data : String) -> UInt64 {
   let hash128 = seed_string_sum128(seed, seed, data)
   hash128.high()
+}
+///|
+/// Convenience Functions (for backwards compatibility)
+
+///|
+/// Create a new 64-bit hasher with the given seed
+/// Uses the 128-bit implementation with seed duplicated
+pub fn new64_with_seed(seed : UInt64) -> Digest64 {
+  Digest64::new_with_seed(seed)
+}
+
+///|
+/// Create a new 64-bit hasher with seed 0
+pub fn new64() -> Digest64 {
+  Digest64::new()
+}
+
+///|
+/// Finalize and return the 64-bit hash (first part of 128-bit hash)
+pub fn sum64_from_digest(digest : Digest64) -> UInt64 {
+  digest.sum64()
+}
+
+///|
+/// Get the hash as a byte array (big-endian, 8 bytes)
+pub fn sum64_bytes_from_digest(digest : Digest64) -> Bytes {
+  digest.sum()
 }

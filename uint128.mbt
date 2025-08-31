@@ -20,17 +20,3 @@ pub fn UInt128::low(self : UInt128) -> UInt64 {
   let UInt128(_high, low) = self
   low
 }
-
-///|
-/// Convert UInt128 to a tuple (high, low)
-pub fn UInt128::to_tuple(self : UInt128) -> (UInt64, UInt64) {
-  let UInt128(high, low) = self
-  (high, low)
-}
-
-///|
-/// Create UInt128 from a tuple (high, low)
-pub fn UInt128::from_tuple(tuple : (UInt64, UInt64)) -> UInt128 {
-  let (high, low) = tuple
-  UInt128(high, low)
-}

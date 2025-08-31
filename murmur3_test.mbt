@@ -248,3 +248,45 @@ test "incremental hashing 128-bit" {
 }
 
 
+
+///|
+/// Test 64-bit streaming hasher methods
+test "Digest64 streaming methods" {
+  for i = 0; i < test_data.length(); i = i + 1 {
+    let test_vec = test_data[i]
+    let data = string_to_utf8_bytes(test_vec.s)
+    let hasher = Digest64::new()
+    hasher.write(data) |> ignore
+    let hash = hasher.sum64()
+    assert_eq(hash, test_vec.h64_1)
+  }
+}
+///|
+/// Test all digest types for consistency
+test "digest types consistency" {
+  let test_data = string_to_utf8_bytes("test consistency")
+  
+  // Test 32-bit
+  let digest32 = Digest32::new()
+  digest32.write(test_data) |> ignore
+  let hash32 = digest32.sum32()
+  
+  // Test 64-bit  
+  let digest64 = Digest64::new()
+  digest64.write(test_data) |> ignore
+  let hash64 = digest64.sum64()
+  
+  // Test 128-bit
+  let digest128 = Digest128::new()
+  digest128.write(test_data) |> ignore
+  let hash128 = digest128.sum128()
+  
+  // Verify that 64-bit is the high part of 128-bit
+  assert_eq(hash64, hash128.high())
+  
+  // Verify that one-shot functions produce the same results
+  assert_eq(hash32, sum32(test_data))
+  assert_eq(hash64, sum64(test_data))
+  assert_eq(hash128.high(), sum128(test_data).high())
+  assert_eq(hash128.low(), sum128(test_data).low())
+}

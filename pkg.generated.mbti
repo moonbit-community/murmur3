@@ -2,9 +2,9 @@
 package "username/murmur3"
 
 // Values
-fn new64() -> Digest128
+fn new64() -> Digest64
 
-fn new64_with_seed(UInt64) -> Digest128
+fn new64_with_seed(UInt64) -> Digest64
 
 fn seed_string_sum128(UInt64, UInt64, String) -> UInt128
 
@@ -32,9 +32,9 @@ fn sum32(Bytes) -> UInt
 
 fn sum64(Bytes) -> UInt64
 
-fn sum64_bytes_from_digest(Digest128) -> Bytes
+fn sum64_bytes_from_digest(Digest64) -> Bytes
 
-fn sum64_from_digest(Digest128) -> UInt64
+fn sum64_from_digest(Digest64) -> UInt64
 
 // Errors
 
@@ -57,13 +57,20 @@ fn Digest32::sum(Self) -> Bytes
 fn Digest32::sum32(Self) -> UInt
 fn Digest32::write(Self, Bytes) -> Int
 
+type Digest64
+fn Digest64::new() -> Self
+fn Digest64::new_with_seed(UInt64) -> Self
+fn Digest64::reset(Self) -> Unit
+fn Digest64::size(Self) -> Int
+fn Digest64::sum(Self) -> Bytes
+fn Digest64::sum64(Self) -> UInt64
+fn Digest64::write(Self, Bytes) -> Int
+
 pub(all) struct UInt128(UInt64, UInt64)
 
-fn UInt128::from_tuple((UInt64, UInt64)) -> Self
 fn UInt128::high(Self) -> UInt64
 fn UInt128::low(Self) -> UInt64
 fn UInt128::new(UInt64, UInt64) -> Self
-fn UInt128::to_tuple(Self) -> (UInt64, UInt64)
 
 // Type aliases
 
