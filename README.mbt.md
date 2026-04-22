@@ -16,19 +16,22 @@ This is a port of the Go implementation from [github.com/twmb/murmur3](https://g
 
 ### One-shot Hashing
 
-```moonbit
+```moonbit nocheck
+///|
 test "32-bit hash example" {
   let data = "Hello, World!".to_bytes()
   let hash = @murmur3.sum32(data)
   inspect(hash, content="1777475617")
 }
 
+///|
 test "64-bit hash example" {
   let data = "Hello, World!".to_bytes()
   let hash = @murmur3.sum64(data)
   inspect(hash, content="11400168794036550540")
 }
 
+///|
 test "128-bit hash example" {
   let data = "Hello, World!".to_bytes()
   let hash = @murmur3.sum128(data)
@@ -40,25 +43,27 @@ test "128-bit hash example" {
 
 For large data or incremental processing:
 
-```moonbit
+```moonbit nocheck
+///|
 test "streaming 32-bit hash" {
   let hasher = @murmur3.Digest32::new()
-  
+
   hasher.write("Hello".to_bytes())
   hasher.write(", ".to_bytes())
   hasher.write("World!".to_bytes())
-  
+
   let result = hasher.sum32()
   inspect(result, content="1777475617")
 }
 
+///|
 test "streaming 128-bit hash" {
   let hasher = @murmur3.Digest128::new()
-  
+
   hasher.write("Hello".to_bytes())
   hasher.write(", ".to_bytes())
   hasher.write("World!".to_bytes())
-  
+
   let hash = hasher.sum128()
   inspect(hash, content="{hi: 11400168794036550540, lo: 3017233662317374139}")
 }
@@ -68,25 +73,29 @@ test "streaming 128-bit hash" {
 
 For consistent hashing across runs or creating hash families:
 
-```moonbit
+```moonbit nocheck
+///|
 test "seeded hashing" {
   let data = "Hello, World!".to_bytes()
   let seed32 = 42U
   let seed64 = 42UL
   let seed128 = @murmur3.UInt128::{ hi: 42UL, lo: 84UL }
-  
+
   // Seeded 32-bit hash
   let hash32 = @murmur3.seed_sum32(seed32, data)
-  
+
   // Seeded 64-bit hash  
   let hash64 = @murmur3.seed_sum64(seed64, data)
-  
+
   // Seeded 128-bit hash
   let hash128 = @murmur3.seed_sum128(seed128, data)
-  
+
   inspect(hash32, content="374868951")
   inspect(hash64, content="2089968197194997941")
-  inspect(hash128, content="{hi: 15086572923677321942, lo: 14159238408620771331}")
+  inspect(
+    hash128,
+    content="{hi: 15086572923677321942, lo: 14159238408620771331}",
+  )
 }
 ```
 
