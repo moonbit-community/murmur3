@@ -18,31 +18,31 @@ let test_data : Array[TestVector] = [
     h32: 0x00000000U,
     h64_1: 0x0000000000000000UL,
     h64_2: 0x0000000000000000UL,
-    s: "",
+    s: b"",
   },
   {
     h32: 0x248bfa47U,
     h64_1: 0xcbd8a7b341bd9b02UL,
     h64_2: 0x5b1e906a48ae1d19UL,
-    s: "hello",
+    s: b"hello",
   },
   {
     h32: 0x149bbb7fU,
     h64_1: 0x342fac623a5ebc8eUL,
     h64_2: 0x4cdcbc079642414dUL,
-    s: "hello, world",
+    s: b"hello, world",
   },
   {
     h32: 0xe31e8a70U,
     h64_1: 0xb89e5988b737affcUL,
     h64_2: 0x664fc2950231b2cbUL,
-    s: "19 Jan 2038 at 3:14:07 AM",
+    s: b"19 Jan 2038 at 3:14:07 AM",
   },
   {
     h32: 0xd5c48bfcU,
     h64_1: 0xcd99481f9ee902c9UL,
     h64_2: 0x695da1a38987b6e7UL,
-    s: "The quick brown fox jumps over the lazy dog.",
+    s: b"The quick brown fox jumps over the lazy dog.",
   },
 ]
 
@@ -114,7 +114,7 @@ test "Digest128 streaming" {
 ///|
 /// Test seed functionality for 32-bit
 test "seed_sum32 functionality" {
-  let data = "test".to_bytes()
+  let data = b"test"
   let hash1 = seed_sum32(0U, data)
   let hash2 = seed_sum32(1U, data)
 
@@ -129,7 +129,7 @@ test "seed_sum32 functionality" {
 ///|
 /// Test seed functionality for 128-bit
 test "seed_sum128 functionality" {
-  let data = "test".to_bytes()
+  let data = b"test"
   let hash128_1 = seed_sum128(UInt128::{ hi: 0UL, lo: 0UL }, data)
   let hash128_2 = seed_sum128(UInt128::{ hi: 1UL, lo: 1UL }, data)
 
@@ -151,7 +151,7 @@ test "seed_sum128 functionality" {
 ///|
 /// Test incremental hashing (processing data in chunks)
 test "incremental hashing 32-bit" {
-  let test_string : Bytes = "hello, world"
+  let test_string : Bytes = b"hello, world"
   let full_data = test_string
 
   // Hash all at once
@@ -159,8 +159,8 @@ test "incremental hashing 32-bit" {
 
   // Hash incrementally
   let hasher = Digest32::new()
-  let part1 : Bytes = "hello, "
-  let part2 : Bytes = "world"
+  let part1 : Bytes = b"hello, "
+  let part2 : Bytes = b"world"
   hasher.write(part1) |> ignore
   hasher.write(part2) |> ignore
   let hash_incremental = hasher.sum32()
@@ -170,7 +170,7 @@ test "incremental hashing 32-bit" {
 ///|
 /// Test incremental hashing (processing data in chunks)
 test "incremental hashing 128-bit" {
-  let test_string : Bytes = "hello, world"
+  let test_string : Bytes = b"hello, world"
   let full_data = test_string
 
   // Hash all at once
@@ -178,8 +178,8 @@ test "incremental hashing 128-bit" {
 
   // Hash incrementally
   let hasher = Digest128::new()
-  let part1 : Bytes = "hello, "
-  let part2 : Bytes = "world"
+  let part1 : Bytes = b"hello, "
+  let part2 : Bytes = b"world"
   hasher.write(part1) |> ignore
   hasher.write(part2) |> ignore
   let hash128_incremental = hasher.sum128()
@@ -207,7 +207,7 @@ test "Digest64 streaming methods" {
 ///|
 /// Test all digest types for consistency
 test "digest types consistency" {
-  let test_data : Bytes = "test consistency"
+  let test_data : Bytes = b"test consistency"
 
   // Test 32-bit
   let digest32 = Digest32::new()
