@@ -76,7 +76,7 @@ impl BMixer for Digest128 with bmix(self, p) {
       (data[13].to_uint64() << 40) |
       (data[14].to_uint64() << 48) |
       (data[15].to_uint64() << 56)
-    data = data[16:].to_bytes()
+    data = data[16:].to_owned()
     let mut k1_processed = k1 * c1_128
     k1_processed = rotate_left_64(k1_processed, 31)
     k1_processed = k1_processed * c2_128

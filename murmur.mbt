@@ -59,7 +59,7 @@ fn[T : BMixer] Digest::write(self : Digest, bmixer : T, data : Bytes) -> Unit {
         block_array.push(p[i])
       }
       let block = Bytes::from_array(block_array)
-      p = p[nfree:].to_bytes()
+      p = p[nfree:].to_owned()
       bmixer.bmix(block) |> ignore // No tail returned
     } else {
       // Tail's buf is large enough to prevent reallocs

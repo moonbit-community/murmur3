@@ -50,7 +50,7 @@ impl BMixer for Digest32 with bmix(self, p) {
       (data[1].to_uint() << 8) |
       (data[2].to_uint() << 16) |
       (data[3].to_uint() << 24)
-    data = data[4:].to_bytes()
+    data = data[4:].to_owned()
     let mut k1_processed = k1 * c1_32
     k1_processed = rotate_left_32(k1_processed, 15)
     k1_processed = k1_processed * c2_32
