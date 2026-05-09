@@ -23,7 +23,7 @@ pub fn seed_sum32(seed : UInt, data : Bytes) -> UInt {
       (p[1].to_uint() << 8) |
       (p[2].to_uint() << 16) |
       (p[3].to_uint() << 24)
-    p = p[4:].to_bytes()
+    p = p[4:].to_owned()
     let mut k1_processed = k1 * c1_32
     k1_processed = rotate_left_32(k1_processed, 15)
     k1_processed = k1_processed * c2_32

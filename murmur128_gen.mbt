@@ -36,7 +36,7 @@ pub fn seed_sum128(seed : UInt128, data : Bytes) -> UInt128 {
       (p[13].to_uint64() << 40) |
       (p[14].to_uint64() << 48) |
       (p[15].to_uint64() << 56)
-    p = p[16:].to_bytes()
+    p = p[16:].to_owned()
     let mut k1_processed = k1 * c1_128
     k1_processed = rotate_left_64(k1_processed, 31)
     k1_processed = k1_processed * c2_128
