@@ -52,8 +52,8 @@ pub(all) struct UInt128 {
   hi : UInt64
   lo : UInt64
 } derive(@debug.Debug)
+pub fn UInt128::to_repr(Self) -> @debug.Repr
 
 // Type aliases
 
 // Traits
-
