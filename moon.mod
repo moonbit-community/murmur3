@@ -1,0 +1,13 @@
+name = "Yu-zh/murmur3"
+
+version = "0.1.0"
+
+readme = "README.md"
+
+repository = "https://github.com/moonbit-community/murmur3"
+
+license = "Apache-2.0"
+
+keywords = [ "hash", "murmur3", "algorithm", "hash-function" ]
+
+description = "MoonBit implementation of Austin Appleby's MurmurHash3 algorithm. Provides 32-bit, 64-bit, and 128-bit hash functions with both streaming and one-shot APIs."
