@@ -8,13 +8,13 @@ import {
 // Values
 pub fn seed_sum128(UInt128, Bytes) -> UInt128
 
-pub fn seed_sum32(UInt, Bytes) -> UInt
+pub fn seed_sum32(UInt32, Bytes) -> UInt32
 
 pub fn seed_sum64(UInt64, Bytes) -> UInt64
 
 pub fn sum128(Bytes) -> UInt128
 
-pub fn sum32(Bytes) -> UInt
+pub fn sum32(Bytes) -> UInt32
 
 pub fn sum64(Bytes) -> UInt64
 
@@ -25,25 +25,25 @@ type Digest128
 pub fn Digest128::new() -> Self
 pub fn Digest128::new_with_seed(UInt64, UInt64) -> Self
 pub fn Digest128::reset(Self) -> Unit
-pub fn Digest128::size(Self) -> Int
+pub fn Digest128::size(Self) -> Int32
 pub fn Digest128::sum(Self) -> Bytes
 pub fn Digest128::sum128(Self) -> UInt128
 pub fn Digest128::write(Self, Bytes) -> Unit
 
 type Digest32
 pub fn Digest32::new() -> Self
-pub fn Digest32::new_with_seed(UInt) -> Self
+pub fn Digest32::new_with_seed(UInt32) -> Self
 pub fn Digest32::reset(Self) -> Unit
-pub fn Digest32::size(Self) -> Int
+pub fn Digest32::size(Self) -> Int32
 pub fn Digest32::sum(Self) -> Bytes
-pub fn Digest32::sum32(Self) -> UInt
+pub fn Digest32::sum32(Self) -> UInt32
 pub fn Digest32::write(Self, Bytes) -> Unit
 
 type Digest64
 pub fn Digest64::new() -> Self
 pub fn Digest64::new_with_seed(UInt64) -> Self
 pub fn Digest64::reset(Self) -> Unit
-pub fn Digest64::size(Self) -> Int
+pub fn Digest64::size(Self) -> Int32
 pub fn Digest64::sum(Self) -> Bytes
 pub fn Digest64::sum64(Self) -> UInt64
 pub fn Digest64::write(Self, Bytes) -> Unit
@@ -52,8 +52,8 @@ pub(all) struct UInt128 {
   hi : UInt64
   lo : UInt64
 } derive(@debug.Debug)
+pub fn UInt128::to_repr(Self) -> @debug.Repr
 
 // Type aliases
 
 // Traits
-

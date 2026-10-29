@@ -4,7 +4,7 @@
 ///|
 /// Compute MurmurHash3 32-bit hash of data with seed 0
 /// Equivalent to: hasher = new32(); hasher.write(data); hasher.sum32()
-pub fn sum32(data : Bytes) -> UInt {
+pub fn sum32(data : Bytes) -> UInt32 {
   seed_sum32(0U, data)
 }
 
@@ -12,7 +12,7 @@ pub fn sum32(data : Bytes) -> UInt {
 /// Compute MurmurHash3 32-bit hash of data with given seed
 /// This reads and processes data in chunks of little endian uint32s,
 /// making the hash portable across architectures
-pub fn seed_sum32(seed : UInt, data : Bytes) -> UInt {
+pub fn seed_sum32(seed : UInt32, data : Bytes) -> UInt32 {
   let mut h1 = seed
   let clen = data.length().reinterpret_as_uint()
   let mut p = data

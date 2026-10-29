@@ -5,7 +5,7 @@
 ///|
 /// Test data structure matching the Go reference implementation
 struct TestVector {
-  h32 : UInt
+  h32 : UInt32
   h64_1 : UInt64
   h64_2 : UInt64
   s : Bytes
@@ -52,7 +52,7 @@ test "sum32 reference vectors" {
   for i = 0; i < test_data.length(); i = i + 1 {
     let test_vec = test_data[i]
     let data = test_vec.s
-    let hash = sum32(data)
+    let hash = @murmur3.sum32(data)
     assert_eq(hash, test_vec.h32)
   }
 }
@@ -63,7 +63,7 @@ test "sum64 reference vectors" {
   for i = 0; i < test_data.length(); i = i + 1 {
     let test_vec = test_data[i]
     let data = test_vec.s
-    let hash = sum64(data)
+    let hash = @murmur3.sum64(data)
     assert_eq(hash, test_vec.h64_1)
   }
 }
@@ -74,7 +74,7 @@ test "sum128 reference vectors" {
   for i = 0; i < test_data.length(); i = i + 1 {
     let test_vec = test_data[i]
     let data = test_vec.s
-    let hash128 = sum128(data)
+    let hash128 = @murmur3.sum128(data)
     let h1 = hash128.hi
     let h2 = hash128.lo
     assert_eq(h1, test_vec.h64_1)
@@ -88,7 +88,7 @@ test "Digest32 streaming" {
   for i = 0; i < test_data.length(); i = i + 1 {
     let test_vec = test_data[i]
     let data = test_vec.s
-    let hasher = Digest32::new()
+    let hasher = @murmur3.Digest32::new()
     hasher.write(data) |> ignore
     let hash = hasher.sum32()
     assert_eq(hash, test_vec.h32)
@@ -101,7 +101,7 @@ test "Digest128 streaming" {
   for i = 0; i < test_data.length(); i = i + 1 {
     let test_vec = test_data[i]
     let data = test_vec.s
-    let hasher = Digest128::new()
+    let hasher = @murmur3.Digest128::new()
     hasher.write(data) |> ignore
     let hash128 = hasher.sum128()
     let h1 = hash128.hi
@@ -115,14 +115,14 @@ test "Digest128 streaming" {
 /// Test seed functionality for 32-bit
 test "seed_sum32 functionality" {
   let data = b"test"
-  let hash1 = seed_sum32(0U, data)
-  let hash2 = seed_sum32(1U, data)
+  let hash1 = @murmur3.seed_sum32(0U, data)
+  let hash2 = @murmur3.seed_sum32(1U, data)
 
   // Different seeds should produce different hashes
   assert_not_eq(hash1, hash2)
 
   // Same seed should produce same hash
-  let hash3 = seed_sum32(0U, data)
+  let hash3 = @murmur3.seed_sum32(0U, data)
   assert_eq(hash1, hash3)
 }
 
@@ -130,8 +130,14 @@ test "seed_sum32 functionality" {
 /// Test seed functionality for 128-bit
 test "seed_sum128 functionality" {
   let data = b"test"
-  let hash128_1 = seed_sum128(UInt128::{ hi: 0UL, lo: 0UL }, data)
-  let hash128_2 = seed_sum128(UInt128::{ hi: 1UL, lo: 1UL }, data)
+  let hash128_1 = @murmur3.seed_sum128(
+    @murmur3.UInt128::{ hi: 0UL, lo: 0UL, },
+    data,
+  )
+  let hash128_2 = @murmur3.seed_sum128(
+    @murmur3.UInt128::{ hi: 1UL, lo: 1UL, },
+    data,
+  )
 
   // Different seeds should produce different hashes
   let h1_1 = hash128_1.hi
@@ -141,7 +147,10 @@ test "seed_sum128 functionality" {
   assert_false(h1_1 == h1_2 && h2_1 == h2_2)
 
   // Same seed should produce same hash
-  let hash128_3 = seed_sum128(UInt128::{ hi: 0UL, lo: 0UL }, data)
+  let hash128_3 = @murmur3.seed_sum128(
+    @murmur3.UInt128::{ hi: 0UL, lo: 0UL, },
+    data,
+  )
   let h1_3 = hash128_3.hi
   let h2_3 = hash128_3.lo
   assert_eq(h1_1, h1_3)
@@ -155,10 +164,10 @@ test "incremental hashing 32-bit" {
   let full_data = test_string
 
   // Hash all at once
-  let hash_full = sum32(full_data)
+  let hash_full = @murmur3.sum32(full_data)
 
   // Hash incrementally
-  let hasher = Digest32::new()
+  let hasher = @murmur3.Digest32::new()
   let part1 : Bytes = b"hello, "
   let part2 : Bytes = b"world"
   hasher.write(part1) |> ignore
@@ -174,10 +183,10 @@ test "incremental hashing 128-bit" {
   let full_data = test_string
 
   // Hash all at once
-  let hash128_full = sum128(full_data)
+  let hash128_full = @murmur3.sum128(full_data)
 
   // Hash incrementally
-  let hasher = Digest128::new()
+  let hasher = @murmur3.Digest128::new()
   let part1 : Bytes = b"hello, "
   let part2 : Bytes = b"world"
   hasher.write(part1) |> ignore
@@ -197,7 +206,7 @@ test "Digest64 streaming methods" {
   for i = 0; i < test_data.length(); i = i + 1 {
     let test_vec = test_data[i]
     let data = test_vec.s
-    let hasher = Digest64::new()
+    let hasher = @murmur3.Digest64::new()
     hasher.write(data) |> ignore
     let hash = hasher.sum64()
     assert_eq(hash, test_vec.h64_1)
@@ -210,17 +219,17 @@ test "digest types consistency" {
   let test_data : Bytes = b"test consistency"
 
   // Test 32-bit
-  let digest32 = Digest32::new()
+  let digest32 = @murmur3.Digest32::new()
   digest32.write(test_data) |> ignore
   let hash32 = digest32.sum32()
 
   // Test 64-bit  
-  let digest64 = Digest64::new()
+  let digest64 = @murmur3.Digest64::new()
   digest64.write(test_data) |> ignore
   let hash64 = digest64.sum64()
 
   // Test 128-bit
-  let digest128 = Digest128::new()
+  let digest128 = @murmur3.Digest128::new()
   digest128.write(test_data) |> ignore
   let hash128 = digest128.sum128()
 
@@ -228,10 +237,10 @@ test "digest types consistency" {
   assert_eq(hash64, hash128.hi)
 
   // Verify that one-shot functions produce the same results
-  assert_eq(hash32, sum32(test_data))
-  assert_eq(hash64, sum64(test_data))
-  assert_eq(hash128.hi, sum128(test_data).hi)
-  assert_eq(hash128.lo, sum128(test_data).lo)
+  assert_eq(hash32, @murmur3.sum32(test_data))
+  assert_eq(hash64, @murmur3.sum64(test_data))
+  assert_eq(hash128.hi, @murmur3.sum128(test_data).hi)
+  assert_eq(hash128.lo, @murmur3.sum128(test_data).lo)
 }
 
 ///|
@@ -241,22 +250,22 @@ test "UInt128 field access and Digest64 methods" {
   let test_data = b"test field access"
 
   // Test 128-bit hash
-  let hash128 = sum128(test_data)
+  let hash128 = @murmur3.sum128(test_data)
   let high_part = hash128.hi
   let low_part = hash128.lo
 
   // Test 64-bit hash matches high part of 128-bit
-  let hash64 = sum64(test_data)
+  let hash64 = @murmur3.sum64(test_data)
   assert_eq(hash64, hash128.hi)
 
   // Test Digest64 methods
-  let digest64 = Digest64::new()
+  let digest64 = @murmur3.Digest64::new()
   digest64.write(test_data) |> ignore
   let digest64_result = digest64.sum64()
   assert_eq(digest64_result, hash64)
 
   // Test consistency between all methods
-  let digest128 = Digest128::new()
+  let digest128 = @murmur3.Digest128::new()
   digest128.write(test_data) |> ignore
   let stream_hash128 = digest128.sum128()
   assert_eq(high_part, stream_hash128.hi)

@@ -3,14 +3,14 @@
 
 ///|
 /// Constants for 32-bit MurmurHash3
-let c1_32 : UInt = 0xcc9e2d51U
+let c1_32 : UInt32 = 0xcc9e2d51U
 
 ///|
-let c2_32 : UInt = 0x1b873593U
+let c2_32 : UInt32 = 0x1b873593U
 
 ///|
 /// Left rotate a 32-bit unsigned integer
-fn rotate_left_32(x : UInt, k : Int) -> UInt {
+fn rotate_left_32(x : UInt32, k : Int32) -> UInt32 {
   (x << k) | (x >> (32 - k))
 }
 
@@ -21,15 +21,15 @@ struct Digest32 {
   /// Base digest for common streaming functionality
   digest : Digest
   /// Seed value for hash initialization  
-  seed : UInt
+  seed : UInt32
   /// Unfinalized running hash state
-  mut h1 : UInt
+  mut h1 : UInt32
 }
 
 ///|
 /// Create a new 32-bit hasher with the given seed
-pub fn Digest32::new_with_seed(seed : UInt) -> Digest32 {
-  { digest: Digest::new(4), seed, h1: seed }
+pub fn Digest32::new_with_seed(seed : UInt32) -> Digest32 {
+  { digest: Digest::new(4), seed, h1: seed, }
 }
 
 ///|
@@ -40,7 +40,7 @@ pub fn Digest32::new() -> Digest32 {
 
 ///|
 /// Implement BMixer trait for Digest32
-impl BMixer for Digest32 with bmix(self, p) {
+impl BMixer for Digest32 with fn bmix(self, p) {
   let mut data = p
   let mut h1 = self.h1
 
@@ -63,18 +63,18 @@ impl BMixer for Digest32 with bmix(self, p) {
 }
 
 ///|
-impl BMixer for Digest32 with size(_self) {
+impl BMixer for Digest32 with fn size(_self) {
   4
 }
 
 ///|
-impl BMixer for Digest32 with reset(self) {
+impl BMixer for Digest32 with fn reset(self) {
   self.h1 = self.seed
 }
 
 ///|
 /// Get the size in bytes (4 for 32-bit hash)
-pub fn Digest32::size(_self : Digest32) -> Int {
+pub fn Digest32::size(_self : Digest32) -> Int32 {
   4
 }
 
@@ -86,7 +86,7 @@ pub fn Digest32::write(self : Digest32, data : Bytes) -> Unit {
 
 ///|
 /// Finalize and return the 32-bit hash
-pub fn Digest32::sum32(self : Digest32) -> UInt {
+pub fn Digest32::sum32(self : Digest32) -> UInt32 {
   let mut h1 = self.h1
   let mut k1 = 0U
 

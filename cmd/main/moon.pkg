@@ -1,7 +1,5 @@
 import {
-  "Yu-zh/murmur3" @murmur3,
+  "Yu-zh/murmur3",
 }
 
-options(
-  "is-main": true,
-)
+pkgtype(kind: "executable")
