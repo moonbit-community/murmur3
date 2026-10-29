@@ -12,13 +12,13 @@
 /// Block mixer interface - defines the core mixing behavior for different hash sizes
 priv trait BMixer {
   /// Mix a block of bytes and return any remaining tail bytes
-  bmix(Self, Bytes) -> Bytes
+  fn bmix(Self, Bytes) -> Bytes
 
   /// Get the size of the hash output in bytes 
-  size(Self) -> Int
+  fn size(Self) -> Int32
 
   /// Reset the internal state
-  reset(Self) -> Unit
+  fn reset(Self) -> Unit
 }
 
 ///|
@@ -26,7 +26,7 @@ priv trait BMixer {
 /// Contains common state shared by all MurmurHash3 variants
 priv struct Digest {
   /// Cumulative length of all digested input
-  mut clen : Int
+  mut clen : Int32
   /// Pending tail bytes (0 to size()-1 bytes)  
   mut tail : Bytes
   /// Internal buffer for tail bytes (expected to be size() large)
@@ -35,8 +35,8 @@ priv struct Digest {
 
 ///|
 /// Create a new digest with the specified buffer size
-fn Digest::new(buf_size : Int) -> Digest {
-  { clen: 0, tail: Bytes::new(0), buf: FixedArray::make(buf_size, 0) }
+fn Digest::new(buf_size : Int32) -> Digest {
+  { clen: 0, tail: Bytes::new(0), buf: FixedArray::make(buf_size, 0), }
 }
 
 ///|
@@ -51,7 +51,7 @@ fn[T : BMixer] Digest::write(self : Digest, bmixer : T, data : Bytes) -> Unit {
     let nfree = bmixer.size() - self.tail.length() // nfree ∈ [1, size()-1]
     if nfree < p.length() {
       // One full block can be formed
-      let block_array = Array::new()
+      let block_array = Array()
       for i = 0; i < self.tail.length(); i = i + 1 {
         block_array.push(self.tail[i])
       }
@@ -63,7 +63,7 @@ fn[T : BMixer] Digest::write(self : Digest, bmixer : T, data : Bytes) -> Unit {
       bmixer.bmix(block) |> ignore // No tail returned
     } else {
       // Tail's buf is large enough to prevent reallocs
-      let new_tail_array = Array::new()
+      let new_tail_array = Array()
       for i = 0; i < self.tail.length(); i = i + 1 {
         new_tail_array.push(self.tail[i])
       }
@@ -80,7 +80,7 @@ fn[T : BMixer] Digest::write(self : Digest, bmixer : T, data : Bytes) -> Unit {
   for i = 0; i < tail_len; i = i + 1 {
     self.buf[i] = self.tail[i]
   }
-  let tail_array = Array::new()
+  let tail_array = Array()
   for i = 0; i < tail_len; i = i + 1 {
     tail_array.push(self.buf[i])
   }

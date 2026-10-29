@@ -5,7 +5,7 @@
 /// Compute MurmurHash3 128-bit hash of data with seeds 0, 0
 /// Equivalent to: hasher = new128(); hasher.write(data); hasher.sum128()
 pub fn sum128(data : Bytes) -> UInt128 {
-  seed_sum128(UInt128::{ hi: 0UL, lo: 0UL }, data)
+  seed_sum128(UInt128::{ hi: 0UL, lo: 0UL, }, data)
 }
 
 ///|
@@ -122,5 +122,5 @@ pub fn seed_sum128(seed : UInt128, data : Bytes) -> UInt128 {
   h2 = fmix64(h2)
   h1 = h1 + h2
   h2 = h2 + h1
-  UInt128::{ hi: h1, lo: h2 }
+  UInt128::{ hi: h1, lo: h2, }
 }

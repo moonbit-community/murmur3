@@ -79,7 +79,7 @@ test "seeded hashing" {
   let data = "Hello, World!".to_bytes()
   let seed32 = 42U
   let seed64 = 42UL
-  let seed128 = @murmur3.UInt128::{ hi: 42UL, lo: 84UL }
+  let seed128 = @murmur3.UInt128::{ hi: 42UL, lo: 84UL, }
 
   // Seeded 32-bit hash
   let hash32 = @murmur3.seed_sum32(seed32, data)

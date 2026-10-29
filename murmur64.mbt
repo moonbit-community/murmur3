@@ -43,7 +43,7 @@ pub fn Digest64::reset(self : Digest64) -> Unit {
 
 ///|
 /// Get the size in bytes (8 for 64-bit hash)
-pub fn Digest64::size(_self : Digest64) -> Int {
+pub fn Digest64::size(_self : Digest64) -> Int32 {
   8
 }
 
@@ -77,6 +77,6 @@ pub fn sum64(data : Bytes) -> UInt64 {
 /// Because the canonical implementation does not support SeedSum64,
 /// this uses SeedSum128(seed, seed, data) and returns the first part
 pub fn seed_sum64(seed : UInt64, data : Bytes) -> UInt64 {
-  let hash128 = seed_sum128(UInt128::{ hi: seed, lo: seed }, data)
+  let hash128 = seed_sum128(UInt128::{ hi: seed, lo: seed, }, data)
   hash128.hi
 }
